@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3 uid="uid://d32pdx5pi1r4g"]
+
+[ext_resource type="PackedScene" uid="uid://ctkay1aovracc" path="res://PoolTable.glb" id="1_r3t3u"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_g5stt"]
+friction = 0.5
+rough = true
+bounce = 0.5
+absorbent = true
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_d4x6l"]
+
+[node name="Table" type="Node3D"]
+
+[node name="PoolTable2" parent="." instance=ExtResource("1_r3t3u")]
+
+[node name="Table" parent="PoolTable2" index="1"]
+collision_mask = 2
+physics_material_override = SubResource("PhysicsMaterial_g5stt")
+
+[node name="RailsCollision" parent="PoolTable2" index="2"]
+collision_layer = 4
+collision_mask = 2
+physics_material_override = SubResource("PhysicsMaterial_d4x6l")
+
+[node name="HeadSpot" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.6, 1.22, 0)
+
+[node name="FootSpot" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.6, 1.22, 0)
+
+[editable path="PoolTable2"]
