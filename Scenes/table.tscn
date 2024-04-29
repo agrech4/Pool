@@ -19,7 +19,6 @@ collision_mask = 2
 physics_material_override = SubResource("PhysicsMaterial_g5stt")
 
 [node name="RailsCollision" parent="PoolTable" index="2"]
-collision_layer = 4
 collision_mask = 2
 physics_material_override = SubResource("PhysicsMaterial_d4x6l")
 

@@ -3,13 +3,13 @@
 [ext_resource type="PhysicsMaterial" uid="uid://c2rr6lsswirbj" path="res://Resources/Materials/ball_physics_material.tres" id="1_mr1xy"]
 [ext_resource type="Script" path="res://Scripts/ball.gd" id="2_gck0a"]
 [ext_resource type="AudioStream" uid="uid://bf2rw5kmi1daa" path="res://Assets/Sounds/ball_clack.wav" id="3_pnf4p"]
-[ext_resource type="Material" uid="uid://b5qiwluvqw6r7" path="res://Resources/Materials/ball_material.tres" id="4_wbp0q"]
+[ext_resource type="Material" uid="uid://b5qiwluvqw6r7" path="res://Resources/Materials/ball_material.tres" id="4_mggey"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_v7fly"]
 radius = 0.285
 
 [sub_resource type="SphereMesh" id="SphereMesh_ccdwe"]
-material = ExtResource("4_wbp0q")
+material = ExtResource("4_mggey")
 radius = 0.285
 height = 0.57
 

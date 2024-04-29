@@ -54,6 +54,7 @@ func _process(_delta):
 func rack():
 	balls.clear()
 	var ball = ball_scene.instantiate()
+	ball.set_collision_layer_value(3,true)
 	ball.ball_value = 0
 	ball.position = head_spot
 	ball.rotate_y(-PI/2)

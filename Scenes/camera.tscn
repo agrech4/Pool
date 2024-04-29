@@ -15,6 +15,7 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 5, 
 [node name="SpinnerY" type="Marker3D" parent="Target"]
 
 [node name="SpinnerX" type="Marker3D" parent="Target/SpinnerY"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 0, 0)
 
 [node name="DirectionDecal" type="Decal" parent="Target/SpinnerY/SpinnerX"]
 transform = Transform3D(1, 0, 0, 0, 0.866025, -0.5, 0, 0.5, 0.866025, 0, 1.75318, -3.6066)
@@ -44,3 +45,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.13364, 0)
 
 [node name="TransTimer" type="Timer" parent="TransCam"]
 one_shot = true
+
+[node name="StableCam" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
