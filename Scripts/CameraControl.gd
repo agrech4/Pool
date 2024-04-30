@@ -128,7 +128,7 @@ func _input(event):
 		if camera_state == CameraState.AIM_DIR or camera_state == CameraState.OVERHEAD:
 			set_aim_strike()
 		elif camera_state == CameraState.AIM_STRIKE:
-			camera_target.strike(aim_decal.global_position,aim_cam.global_position,200)
+			camera_target.strike(aim_decal.global_position,aim_cam.global_position,400)
 			set_watch_shot()
 		elif camera_state == CameraState.WATCH_SHOT:
 			set_overhead()

@@ -26,6 +26,9 @@ script = ExtResource("1_dhg6g")
 hit_force = 30.0
 ball_scene = ExtResource("2_8fsvv")
 
+[node name="GameManager" type="Node" parent="."]
+unique_name_in_owner = true
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_esiy3")
 

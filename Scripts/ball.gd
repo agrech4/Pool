@@ -5,6 +5,8 @@ enum BallType {CUE, SOLID, STRIPE}
 
 @export_range(0,15) var ball_value: int = 0
 
+@onready var impact_sfx: AudioStreamPlayer3D = $ImpactSFX
+
 var textures: Array[Resource] = [
 	preload("res://Assets/Textures/CueBall.png"),
 	preload("res://Assets/Textures/1Ball.png"),
@@ -44,9 +46,6 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(_delta):
 	ball_velocity = linear_velocity
-	#if ball_type == BallType.CUE:
-		#if angular_velocity.length() >= 5:
-			#print(angular_velocity)
 
 
 #Used with on body exited to play sound when two balls collide
@@ -65,12 +64,15 @@ func _on_body_exited(body):
 	if body.get_collision_layer_value(2):
 		if body in colliding_balls:
 			# Calculates the strength of the collision and plays an appropriately loud sound
-			var velocities_after_impact = [ball_velocity, body.ball_velocity]
+			var velocities_after_impact: Array[Vector3] = [ball_velocity, body.ball_velocity]
 			var collision_energy: float = max((velocities_before_impact[0] - velocities_after_impact[0]).length(),
 					(velocities_before_impact[1] - velocities_after_impact[1]).length())
-			var volume = min(collision_energy - 32,0)
-			$BallImpact.set_volume_db(volume)
-			$BallImpact.play()
+			var volume: float = min((collision_energy - 32.0) * (18.0/32.0),0)
+			var pitch: float = 1 + (collision_energy - 16.0) * .01
+			print(pitch)
+			impact_sfx.set_volume_db(volume)
+			impact_sfx.set_pitch_scale(pitch)
+			impact_sfx.play()
 			colliding_balls.erase(body)
 
 
@@ -94,6 +96,6 @@ func strike(hit:Vector3,origin:Vector3,strength:float):
 	apply_impulse(impulse)
 	#apply_impulse(- strength * pos_to_hit)
 	apply_torque_impulse(torque_impulse)
-	print(pos_to_hit)
-	print(dir_of_force)
-	print(torque_impulse)
+	#print(pos_to_hit)
+	#print(dir_of_force)
+	#print(torque_impulse)
