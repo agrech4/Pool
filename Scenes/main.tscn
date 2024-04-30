@@ -1,8 +1,8 @@
 [gd_scene load_steps=10 format=3 uid="uid://o2b51emoy8gl"]
 
-[ext_resource type="Script" path="res://Scripts/main.gd" id="1_dhg6g"]
 [ext_resource type="PackedScene" uid="uid://do3vl4en578a0" path="res://Scenes/ball.tscn" id="2_8fsvv"]
 [ext_resource type="PackedScene" uid="uid://d32pdx5pi1r4g" path="res://Scenes/table.tscn" id="3_fy1fu"]
+[ext_resource type="Script" path="res://Scripts/game_manager.gd" id="3_uqwmy"]
 [ext_resource type="PackedScene" uid="uid://p6nj77pjt4lo" path="res://Scenes/camera.tscn" id="4_8x8pc"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_uajrg"]
@@ -22,12 +22,12 @@ absorbent = true
 size = Vector3(50, 1, 50)
 
 [node name="Main" type="Node3D"]
-script = ExtResource("1_dhg6g")
-hit_force = 30.0
-ball_scene = ExtResource("2_8fsvv")
 
-[node name="GameManager" type="Node" parent="."]
+[node name="GameManager" type="Node" parent="." node_paths=PackedStringArray("table")]
 unique_name_in_owner = true
+script = ExtResource("3_uqwmy")
+ball_scene = ExtResource("2_8fsvv")
+table = NodePath("../Table")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_esiy3")
@@ -47,7 +47,9 @@ physics_material_override = SubResource("PhysicsMaterial_htprw")
 shape = SubResource("BoxShape3D_p7dqc")
 
 [node name="Table" parent="." instance=ExtResource("3_fy1fu")]
+unique_name_in_owner = true
 
 [node name="Camera" parent="." node_paths=PackedStringArray("overhead_location", "camera_target") instance=ExtResource("4_8x8pc")]
+unique_name_in_owner = true
 overhead_location = NodePath("../OverheadCameraPosition")
 camera_target = NodePath("../Table/HeadSpot")

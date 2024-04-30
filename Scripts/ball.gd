@@ -69,7 +69,6 @@ func _on_body_exited(body):
 					(velocities_before_impact[1] - velocities_after_impact[1]).length())
 			var volume: float = min((collision_energy - 32.0) * (18.0/32.0),0)
 			var pitch: float = 1 + (collision_energy - 16.0) * .01
-			print(pitch)
 			impact_sfx.set_volume_db(volume)
 			impact_sfx.set_pitch_scale(pitch)
 			impact_sfx.play()

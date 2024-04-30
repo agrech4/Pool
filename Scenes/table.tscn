@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://d32pdx5pi1r4g"]
+[gd_scene load_steps=5 format=3 uid="uid://d32pdx5pi1r4g"]
 
 [ext_resource type="PackedScene" uid="uid://ctkay1aovracc" path="res://Assets/Models/PoolTable/PoolTable.glb" id="1_3kcid"]
 
@@ -9,6 +9,9 @@ bounce = 0.5
 absorbent = true
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_d4x6l"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_qa12k"]
+radius = 1.0
 
 [node name="Table" type="Node3D"]
 
@@ -27,5 +30,49 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.6, 1.22, 0)
 
 [node name="FootSpot" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.6, 1.22, 0)
+
+[node name="Pockets" type="Node" parent="."]
+
+[node name="PocketSide" type="Area3D" parent="Pockets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -6.2)
+collision_mask = 6
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Pockets/PocketSide"]
+shape = SubResource("CylinderShape3D_qa12k")
+
+[node name="PocketSide2" type="Area3D" parent="Pockets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 6.2)
+collision_mask = 6
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Pockets/PocketSide2"]
+shape = SubResource("CylinderShape3D_qa12k")
+
+[node name="PocketCorner" type="Area3D" parent="Pockets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.4, -0.5, 5.8)
+collision_mask = 6
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Pockets/PocketCorner"]
+shape = SubResource("CylinderShape3D_qa12k")
+
+[node name="PocketCorner2" type="Area3D" parent="Pockets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.4, -0.5, -5.8)
+collision_mask = 6
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Pockets/PocketCorner2"]
+shape = SubResource("CylinderShape3D_qa12k")
+
+[node name="PocketCorner3" type="Area3D" parent="Pockets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.4, -0.5, -5.8)
+collision_mask = 6
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Pockets/PocketCorner3"]
+shape = SubResource("CylinderShape3D_qa12k")
+
+[node name="PocketCorner4" type="Area3D" parent="Pockets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.4, -0.5, 5.8)
+collision_mask = 6
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Pockets/PocketCorner4"]
+shape = SubResource("CylinderShape3D_qa12k")
 
 [editable path="PoolTable"]

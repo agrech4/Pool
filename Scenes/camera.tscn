@@ -1,11 +1,11 @@
 [gd_scene load_steps=4 format=3 uid="uid://p6nj77pjt4lo"]
 
-[ext_resource type="Script" path="res://Scripts/CameraControl.gd" id="1_t17sy"]
+[ext_resource type="Script" path="res://Scripts/camera_control.gd" id="1_yhvq1"]
 [ext_resource type="Texture2D" uid="uid://d06juv1cdwy7j" path="res://Assets/Textures/ShotPreview.png" id="2_y7gbb"]
 [ext_resource type="Texture2D" uid="uid://c7mtueal313tn" path="res://Assets/Textures/ShotAimPreview.png" id="3_2k6ru"]
 
 [node name="Camera" type="Node3D"]
-script = ExtResource("1_t17sy")
+script = ExtResource("1_yhvq1")
 
 [node name="OverheadCam" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 5, 0)

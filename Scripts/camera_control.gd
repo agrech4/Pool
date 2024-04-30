@@ -26,6 +26,9 @@ const TRANSITION_TIME: float = 0.2
 const DISTANCE_MIN: float = 2.5
 const DISTANCE_MAX: float = 20.0
 
+var trans_start: Transform3D
+var trans_end: Transform3D
+
 @onready var target: Marker3D = $Target
 @onready var spinner_y: Marker3D = $Target/SpinnerY
 @onready var spinner_x: Marker3D = $Target/SpinnerY/SpinnerX
@@ -89,11 +92,8 @@ func _process(delta):
 	if camera_state == CameraState.TRANSITION:
 		if !trans_timer.is_stopped():
 			var t: float = (TRANSITION_TIME - trans_timer.time_left) / TRANSITION_TIME
-			var start: Transform3D = cur_cam.global_transform
-			var end: Transform3D = next_cam.global_transform
-			trans_cam.global_transform = start.interpolate_with(end, t)
-			#if next_state == CameraState.WATCH_SHOT:
-				#trans_cam.look_at(camera_target.position)
+			trans_end = next_cam.global_transform
+			trans_cam.global_transform = trans_start.interpolate_with(trans_end, t)
 	
 	
 	stable_cam.look_at(camera_target.position)
@@ -185,14 +185,6 @@ func set_watch_shot():
 	stable_cam.global_position = cur_cam.global_position
 	stable_cam.position.y += 3
 	transition()
-	#set_overhead()
-	#camera_state = CameraState.OVERHEAD
-	#target.position = overhead_location.position
-	#spinner.rotation.x = - PI / 2
-	#spinner.rotation.y = 0
-	#camera.position.z = 2.5
-	#direction_decal.visible = false
-	#aim_decal.visible = false
 
 
 func set_free_cam():
@@ -205,6 +197,8 @@ func set_free_cam():
 #transition between cameras
 func transition():
 	camera_state = CameraState.TRANSITION
+	trans_start = cur_cam.global_transform
+	trans_end = next_cam.global_transform
 	trans_timer.set_wait_time(TRANSITION_TIME)
 	trans_timer.start()
 	trans_cam.make_current()
