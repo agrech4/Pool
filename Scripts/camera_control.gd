@@ -41,6 +41,7 @@ var trans_end: Transform3D
 @onready var trans_cam: Camera3D = $TransCam
 @onready var stable_cam: Camera3D = $StableCam
 @onready var trans_timer: Timer = $TransCam/TransTimer
+@onready var game_manager: Node = %GameManager
 
 
 # Called when the node enters the scene tree for the first time.
@@ -114,7 +115,6 @@ func _physics_process(_delta):
 
 
 func _input(event):
-	
 	# Handles input for switching cameras
 	if event.is_action_pressed("camera_switch"):
 		if camera_state == CameraState.OVERHEAD:
@@ -124,19 +124,19 @@ func _input(event):
 		elif camera_state == CameraState.WATCH_SHOT:
 			set_overhead()
 	
-	if event.is_action_pressed("hit_ball"):
-		if camera_state == CameraState.AIM_DIR or camera_state == CameraState.OVERHEAD:
-			set_aim_strike()
-		elif camera_state == CameraState.AIM_STRIKE:
-			camera_target.strike(aim_decal.global_position,aim_cam.global_position,400)
-			set_watch_shot()
-		elif camera_state == CameraState.WATCH_SHOT:
-			set_overhead()
+	#if event.is_action_pressed("hit_ball"):
+		#if camera_state == CameraState.AIM_DIR or camera_state == CameraState.OVERHEAD:
+			#set_aim_strike()
+		#elif camera_state == CameraState.AIM_STRIKE:
+			#camera_target.strike(aim_decal.global_position,aim_cam.global_position,400)
+			#set_watch_shot()
+		#elif camera_state == CameraState.WATCH_SHOT:
+			#set_overhead()
 	
 	if event.is_action_pressed("ui_cancel"):
-		if camera_state == CameraState.AIM_STRIKE:
-			set_aim_dir()
-		elif camera_state == CameraState.WATCH_SHOT:
+		#if camera_state == CameraState.AIM_STRIKE:
+			#set_aim_dir()
+		if camera_state == CameraState.WATCH_SHOT:
 			set_aim_dir()
 	
 	if event.is_action_pressed("free_cam"):
@@ -183,8 +183,9 @@ func set_watch_shot():
 	next_state = CameraState.WATCH_SHOT
 	next_cam = stable_cam
 	stable_cam.global_position = cur_cam.global_position
-	stable_cam.position.y += 3
+	stable_cam.position.y += 10
 	transition()
+	#set_overhead()
 
 
 func set_free_cam():
@@ -196,6 +197,7 @@ func set_free_cam():
 
 #transition between cameras
 func transition():
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	camera_state = CameraState.TRANSITION
 	trans_start = cur_cam.global_transform
 	trans_end = next_cam.global_transform
@@ -210,7 +212,21 @@ func _on_trans_timer_timeout():
 	next_cam.make_current()
 
 
-func reset_target_cam():
+func reset_target_cam(): 
 	target.position = camera_target.position
 	spinner_y.rotation.y = PI / 2
 	target_cam.position.z = DISTANCE_MIN
+
+
+func aim():
+	if camera_state == CameraState.AIM_DIR or camera_state == CameraState.OVERHEAD:
+		set_aim_strike()
+		return true
+	return false
+
+
+func shoot():
+	if camera_state == CameraState.AIM_STRIKE:
+		set_watch_shot()
+		return true
+	return false

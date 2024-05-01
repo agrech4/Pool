@@ -1,6 +1,7 @@
 extends Node
 
 const BALL_RAD: float = .285
+const STRENGTH_MULT: float = 400
 
 @export var ball_scene: PackedScene
 @export var rack_buffer: float = 0.005
@@ -9,12 +10,17 @@ const BALL_RAD: float = .285
 
 var balls: Array[PoolBall]
 
+var is_aiming: bool = false
+var power: float = 0.0
+
 @onready var rack_rad: float = BALL_RAD + rack_buffer
 @onready var row_sep: float = rack_rad * sqrt(3)
 
-@onready var camera: Camera = %Camera
-
 @onready var pockets: Node = %Table/Pockets
+
+@onready var camera: Camera = %Camera
+@onready var power_bar = $PowerBar
+@onready var power_timer = $PowerTimer
 
 @onready var head_spot: Vector3 = %Table/HeadSpot.position
 @onready var foot_spot: Vector3 = %Table/FootSpot.position
@@ -45,7 +51,10 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
-	pass
+	if is_aiming:
+		var time_norm = power_timer.get_time_left() / power_timer.get_wait_time()
+		power = (-cos(2 * PI * time_norm) + 1) / 2
+		power_bar.material.set_shader_parameter("fill",power)
 
 
 func _input(event):
@@ -53,6 +62,21 @@ func _input(event):
 		rack()
 		camera.reset_target_cam()
 		camera.set_overhead()
+	
+	if event.is_action_pressed("hit_ball"):
+		if !is_aiming:
+			if camera.aim():
+				power_bar.visible = true
+				power_timer.start()
+				is_aiming = true
+			else:
+				print_debug("Camera State Mismatch")
+		else:
+			if camera.shoot():
+				power_bar.visible = false
+				power_timer.stop()
+				is_aiming = false
+				hit_ball()
 
 
 # Clears all balls in the scene, then racks a new set of balls
@@ -80,6 +104,14 @@ func rack():
 		balls.append(ball)
 
 
+func hit_ball():
+	var hit_loc: Vector3 = camera.aim_decal.global_position
+	var hit_dir: Vector3 = camera.target.global_position - camera.aim_cam.global_position
+	var strength: float = power * STRENGTH_MULT
+	camera.camera_target.strike(hit_loc,hit_dir,strength)
+
+
+# Called when a ball enters a pocket
 func _on_body_entered(body):
 	if body is PoolBall:
 		if body.ball_value != 0:

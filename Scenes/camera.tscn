@@ -8,7 +8,8 @@
 script = ExtResource("1_yhvq1")
 
 [node name="OverheadCam" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 5, 0)
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 12, 0)
+size = 15.0
 
 [node name="Target" type="Marker3D" parent="."]
 

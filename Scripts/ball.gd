@@ -86,9 +86,8 @@ func set_type():
 
 
 #calculates and applies all forces from a strike
-func strike(hit:Vector3,origin:Vector3,strength:float):
-	var pos_to_hit: Vector3 = hit - global_position
-	var dir_of_force: Vector3 = global_position - origin
+func strike(hit_loc:Vector3, dir_of_force:Vector3, strength:float):
+	var pos_to_hit: Vector3 = hit_loc - global_position
 	var angle_from_center = (-dir_of_force).angle_to(pos_to_hit)
 	var impulse:Vector3 = (dir_of_force).normalized() * strength * (cos(angle_from_center) + 1) / 2
 	var torque_impulse: Vector3 = pos_to_hit.cross(SPIN_COEFFICIENT * strength * dir_of_force)

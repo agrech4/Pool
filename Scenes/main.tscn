@@ -1,9 +1,14 @@
-[gd_scene load_steps=10 format=3 uid="uid://o2b51emoy8gl"]
+[gd_scene load_steps=12 format=3 uid="uid://o2b51emoy8gl"]
 
 [ext_resource type="PackedScene" uid="uid://do3vl4en578a0" path="res://Scenes/ball.tscn" id="2_8fsvv"]
 [ext_resource type="PackedScene" uid="uid://d32pdx5pi1r4g" path="res://Scenes/table.tscn" id="3_fy1fu"]
 [ext_resource type="Script" path="res://Scripts/game_manager.gd" id="3_uqwmy"]
 [ext_resource type="PackedScene" uid="uid://p6nj77pjt4lo" path="res://Scenes/camera.tscn" id="4_8x8pc"]
+[ext_resource type="Shader" path="res://Resources/Shaders/power_bar.gdshader" id="5_4r8es"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_t1cy0"]
+shader = ExtResource("5_4r8es")
+shader_parameter/fill = 0.0
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_uajrg"]
 
@@ -28,6 +33,25 @@ unique_name_in_owner = true
 script = ExtResource("3_uqwmy")
 ball_scene = ExtResource("2_8fsvv")
 table = NodePath("../Table")
+
+[node name="PowerBar" type="ColorRect" parent="GameManager"]
+visible = false
+material = SubResource("ShaderMaterial_t1cy0")
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -256.0
+offset_top = -112.0
+offset_right = 256.0
+offset_bottom = -72.0
+grow_horizontal = 2
+grow_vertical = 0
+color = Color(0.729412, 0.345098, 0.141176, 1)
+
+[node name="PowerTimer" type="Timer" parent="GameManager"]
+wait_time = 2.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_esiy3")
