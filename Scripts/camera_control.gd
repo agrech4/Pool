@@ -115,37 +115,6 @@ func _physics_process(_delta):
 
 
 func _input(event):
-	# Handles input for switching cameras
-	if event.is_action_pressed("camera_switch"):
-		if camera_state == CameraState.OVERHEAD:
-			set_aim_dir()
-		elif camera_state == CameraState.AIM_DIR:
-			set_overhead()
-		elif camera_state == CameraState.WATCH_SHOT:
-			set_overhead()
-	
-	#if event.is_action_pressed("hit_ball"):
-		#if camera_state == CameraState.AIM_DIR or camera_state == CameraState.OVERHEAD:
-			#set_aim_strike()
-		#elif camera_state == CameraState.AIM_STRIKE:
-			#camera_target.strike(aim_decal.global_position,aim_cam.global_position,400)
-			#set_watch_shot()
-		#elif camera_state == CameraState.WATCH_SHOT:
-			#set_overhead()
-	
-	if event.is_action_pressed("ui_cancel"):
-		#if camera_state == CameraState.AIM_STRIKE:
-			#set_aim_dir()
-		if camera_state == CameraState.WATCH_SHOT:
-			set_aim_dir()
-	
-	if event.is_action_pressed("free_cam"):
-		if camera_state == CameraState.FREE_CAM:
-			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-			set_overhead()
-		elif camera_state != CameraState.TRANSITION:
-			set_free_cam()
-	
 	# Handles mouse input for free cam
 	if camera_state == CameraState.FREE_CAM:
 		if event is InputEventMouseMotion:
@@ -185,19 +154,16 @@ func set_watch_shot():
 	stable_cam.global_position = cur_cam.global_position
 	stable_cam.position.y += 10
 	transition()
-	#set_overhead()
 
 
 func set_free_cam():
 	next_state = CameraState.FREE_CAM
 	next_cam = free_cam
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	transition()
 
 
 #transition between cameras
 func transition():
-	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	camera_state = CameraState.TRANSITION
 	trans_start = cur_cam.global_transform
 	trans_end = next_cam.global_transform
@@ -230,3 +196,25 @@ func shoot():
 		set_watch_shot()
 		return true
 	return false
+
+
+func toggle_free_cam():
+	if camera_state == CameraState.AIM_STRIKE:
+		return false
+	if camera_state == CameraState.FREE_CAM:
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		set_overhead()
+	elif camera_state != CameraState.TRANSITION:
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+		set_watch_shot()
+	return true
+
+
+func toggle_cam():
+	if camera_state == CameraState.AIM_STRIKE:
+		return false
+	if camera_state == CameraState.OVERHEAD or camera_state == CameraState.WATCH_SHOT:
+		set_aim_dir()
+	elif camera_state == CameraState.AIM_DIR:
+		set_overhead()
+	return true

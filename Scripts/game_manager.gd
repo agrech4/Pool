@@ -19,8 +19,8 @@ var power: float = 0.0
 @onready var pockets: Node = %Table/Pockets
 
 @onready var camera: Camera = %Camera
-@onready var power_bar = $PowerBar
-@onready var power_timer = $PowerTimer
+@onready var power_bar: ColorRect = $PowerBar
+@onready var power_timer: Timer = $PowerTimer
 
 @onready var head_spot: Vector3 = %Table/HeadSpot.position
 @onready var foot_spot: Vector3 = %Table/FootSpot.position
@@ -45,7 +45,7 @@ var power: float = 0.0
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	for pocket in pockets.get_children():
-		pocket.body_entered.connect(_on_body_entered)
+		pocket.body_entered.connect(_on_ball_pocketed)
 	rack()
 
 
@@ -59,24 +59,34 @@ func _process(_delta):
 
 func _input(event):
 	if event.is_action_pressed("reset"):
+		if is_aiming:
+			toggle_is_aiming()
 		rack()
 		camera.reset_target_cam()
 		camera.set_overhead()
 	
 	if event.is_action_pressed("hit_ball"):
-		if !is_aiming:
-			if camera.aim():
-				power_bar.visible = true
-				power_timer.start()
-				is_aiming = true
-			else:
-				print_debug("Camera State Mismatch")
-		else:
-			if camera.shoot():
-				power_bar.visible = false
-				power_timer.stop()
-				is_aiming = false
-				hit_ball()
+		if !is_aiming and camera.aim():
+			toggle_is_aiming()
+		elif is_aiming and camera.shoot():
+			toggle_is_aiming()
+			hit_ball()
+	
+	if event.is_action_pressed("free_cam"):
+		if !is_aiming and !camera.toggle_free_cam():
+			print_debug("Camera in wrong state")
+	
+	if event.is_action_pressed("camera_switch"):
+		if is_aiming:
+			toggle_is_aiming()
+			camera.set_aim_dir()
+		if !is_aiming and !camera.toggle_cam():
+			print_debug("Camera in wrong state")
+	
+	if event.is_action_pressed("cancel"):
+		if is_aiming:
+			toggle_is_aiming()
+			camera.set_aim_dir()
 
 
 # Clears all balls in the scene, then racks a new set of balls
@@ -112,9 +122,18 @@ func hit_ball():
 
 
 # Called when a ball enters a pocket
-func _on_body_entered(body):
+func _on_ball_pocketed(body):
 	if body is PoolBall:
 		if body.ball_value != 0:
 			print(str(body.ball_value) + " ball pocketed")
 		else:
 			print("scratch")
+
+
+func toggle_is_aiming():
+	power_bar.visible = !power_bar.visible
+	is_aiming = !is_aiming
+	if power_timer.is_stopped():
+		power_timer.start()
+	else:
+		power_timer.stop()
