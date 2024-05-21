@@ -134,7 +134,6 @@ cancel={
 
 common/physics_ticks_per_second=240
 3d/physics_engine="JoltPhysics3D"
-3d/default_gravity=9.8
 jolt_3d/continuous_cd/movement_threshold=25.0
 jolt_3d/solver/contact_speculative_distance=0.0
 jolt_3d/solver/contact_allowed_penetration=0.0

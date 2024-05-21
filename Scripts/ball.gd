@@ -1,7 +1,7 @@
 class_name PoolBall
 extends RigidBody3D
 
-enum BallType {CUE, SOLID, STRIPE}
+enum BallType {CUE, SOLID, EIGHT, STRIPE}
 
 @export_range(0,15) var ball_value: int = 0
 
@@ -33,6 +33,13 @@ var first_hit: PoolBall = null
 const SPIN_COEFFICIENT: float = 1.0
 
 @onready var ball_type: BallType = set_type()
+
+
+func init_vals(ball_value_: int, position_: Vector3):
+	ball_value = ball_value_
+	if ball_value_ == 0:
+		set_collision_layer_value(3,true)
+	position = position_
 
 
 # Called when the node enters the scene tree for the first time.
@@ -79,8 +86,10 @@ func set_type():
 	# Sets ball type
 	if ball_value == 0:
 		return BallType.CUE
-	elif ball_value <= 8:
+	elif ball_value < 8:
 		return BallType.SOLID
+	elif ball_value == 8:
+		return BallType.EIGHT
 	else:
 		return BallType.STRIPE
 

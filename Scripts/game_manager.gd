@@ -1,10 +1,11 @@
 extends Node
 
+
 const BALL_RAD: float = .285
-const STRENGTH_MULT: float = 400
+const STRENGTH_MULT: float = 800
 
 @export var ball_scene: PackedScene
-@export var rack_buffer: float = 0.005
+@export var rack_buffer: float = 0.008
 
 @export var table: Node3D
 
@@ -12,6 +13,10 @@ var balls: Array[PoolBall]
 
 var is_aiming: bool = false
 var power: float = 0.0
+
+var player_one: Player = Player.new()
+var player_two: Player = Player.new()
+var cur_player: Player = player_one
 
 @onready var rack_rad: float = BALL_RAD + rack_buffer
 @onready var row_sep: float = rack_rad * sqrt(3)
@@ -94,22 +99,30 @@ func rack():
 	for ball in balls:
 		ball.queue_free()
 	balls.clear()
-	var ball = ball_scene.instantiate()
-	ball.set_collision_layer_value(3,true)
-	ball.ball_value = 0
-	ball.position = head_spot
-	ball.rotate_y(-PI/2)
+	var ball: PoolBall = ball_scene.instantiate()
+	ball.init_vals(0, head_spot)
 	add_child(ball)
 	balls.append(ball)
 	camera.camera_target = ball
+	
+	var solids: Array[int] = [1,2,3,4,5,6,7]
+	var stripes: Array[int] = [9,10,11,12,13,14,15]
+	var corners: Array[int] = [solids.pop_at(randi_range(0,6)),stripes.pop_at(randi_range(0,6))]
+	var balls_left: Array[int] = solids + stripes
 	for i in rack_locs.size():
 		ball = ball_scene.instantiate()
-		ball.ball_value = i + 1
-		ball.position = rack_locs[i]
-		if i != 0:
-			ball.position.x += randf_range(-rack_buffer,rack_buffer)
-			ball.position.z += randf_range(-rack_buffer,rack_buffer)
-		ball.rotate_y(-PI/2)
+		var ball_value: int = i+1
+		# ensure the eight ball is in the middle and the corners are opposite types
+		if (ball_value != 8):
+			if (i == 4 or i == 11):
+				ball_value = corners.pop_at(randi_range(0,corners.size()-1))
+			else:
+				ball_value = balls_left.pop_at(randi_range(0,balls_left.size()-1))
+		var spawn_loc: Vector3 = rack_locs[i]
+		# add slight variation to the location of the ball
+		spawn_loc.x += randf_range(-rack_buffer,rack_buffer)
+		spawn_loc.z += randf_range(-rack_buffer,rack_buffer)
+		ball.init_vals(ball_value, spawn_loc)
 		add_child(ball)
 		balls.append(ball)
 
@@ -137,3 +150,8 @@ func toggle_is_aiming():
 		power_timer.start()
 	else:
 		power_timer.stop()
+
+
+class Player:
+	var balltype: PoolBall.BallType
+	var num_pocketed: int = 0
