@@ -10,6 +10,7 @@ const STRENGTH_MULT: float = 800
 @export var table: Node3D
 
 var balls: Array[PoolBall]
+var cue_shader: ShaderMaterial
 
 var is_aiming: bool = false
 var power: float = 0.0
@@ -17,6 +18,8 @@ var power: float = 0.0
 var player_one: Player = Player.new()
 var player_two: Player = Player.new()
 var cur_player: Player = player_one
+
+
 
 @onready var rack_rad: float = BALL_RAD + rack_buffer
 @onready var row_sep: float = rack_rad * sqrt(3)
@@ -60,7 +63,9 @@ func _process(_delta):
 		var time_norm = power_timer.get_time_left() / power_timer.get_wait_time()
 		power = (-cos(2 * PI * time_norm) + 1) / 2
 		power_bar.material.set_shader_parameter("fill",power)
-
+		cue_shader.set_shader_parameter("fill",power)
+		#var shader: ShaderMaterial = cue.find_child("MeshInstance3D").get_surface_override_material(0).get_next_pass()
+		#shader.set_shader_parameter("fill",power)
 
 func _input(event):
 	if event.is_action_pressed("reset"):
@@ -103,12 +108,14 @@ func rack():
 	ball.init_vals(0, head_spot)
 	add_child(ball)
 	balls.append(ball)
+	cue_shader = ball.find_child("MeshInstance3D").get_surface_override_material(0).get_next_pass()
 	camera.camera_target = ball
-	
+	# Arrays for all the values for pool balls
 	var solids: Array[int] = [1,2,3,4,5,6,7]
 	var stripes: Array[int] = [9,10,11,12,13,14,15]
 	var corners: Array[int] = [solids.pop_at(randi_range(0,6)),stripes.pop_at(randi_range(0,6))]
 	var balls_left: Array[int] = solids + stripes
+	# creates a ball for every position in the rack, choosing a unique value for each
 	for i in rack_locs.size():
 		ball = ball_scene.instantiate()
 		var ball_value: int = i+1
@@ -146,6 +153,8 @@ func _on_ball_pocketed(body):
 func toggle_is_aiming():
 	power_bar.visible = !power_bar.visible
 	is_aiming = !is_aiming
+	power_bar.material.set_shader_parameter("fill",0)
+	cue_shader.set_shader_parameter("fill",0)
 	if power_timer.is_stopped():
 		power_timer.start()
 	else:

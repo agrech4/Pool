@@ -25,6 +25,7 @@ var textures: Array[Resource] = [
 	preload("res://Assets/Textures/14Ball.png"),
 	preload("res://Assets/Textures/15Ball.png"),
 ]
+var cue_power_shader: Shader = preload("res://Resources/Shaders/ball_power.gdshader")
 var colliding_balls: Array[Node]
 var ball_velocity: Vector3
 var velocities_before_impact: Array[Vector3]
@@ -45,8 +46,12 @@ func init_vals(ball_value_: int, position_: Vector3):
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# Set the texture image based on the ball value
-	var mat = $MeshInstance3D.mesh.surface_get_material(0).duplicate()
+	var mat: Material = $MeshInstance3D.mesh.surface_get_material(0).duplicate()
 	mat.albedo_texture = textures[ball_value]
+	if ball_type == BallType.CUE:
+		var cue_shader_material: ShaderMaterial = ShaderMaterial.new()
+		cue_shader_material.set_shader(cue_power_shader)
+		mat.set_next_pass(cue_shader_material)
 	$MeshInstance3D.set_surface_override_material(0,mat)
 
 

@@ -21,7 +21,7 @@ mass = 10.0
 physics_material_override = ExtResource("1_mr1xy")
 max_contacts_reported = 8
 contact_monitor = true
-angular_damp = 2.0
+angular_damp = 4.0
 script = ExtResource("2_gck0a")
 
 [node name="ImpactSFX" type="AudioStreamPlayer3D" parent="."]
